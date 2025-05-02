@@ -28,7 +28,7 @@ var createCarPos = true;
 var uSpeed = 0.001;
 
 // FOG Background
-var setcolor = 0xF02050;
+var setcolor = 0x39FF14;
 scene.background = new THREE.Color(setcolor);
 scene.fog = new THREE.Fog(setcolor, 10, 16);
 
