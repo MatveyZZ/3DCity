@@ -243,7 +243,6 @@ var animate = function () {
 
 }
 
-
 // Calling Main Functions
 generateLines();
 init();
