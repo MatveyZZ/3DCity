@@ -185,66 +185,75 @@ var gridHelper = new THREE.GridHelper(60, 120, 0xFF0000, 0x000000); // Созд�
 city.add(gridHelper); // Добавляет вспомогательную сетку в объект города
 
 // Cars World
-var createCars = function (cScale = 2, cPos = 20, cColor = 0xFFFF00) {
-    var cMat = new THREE.MeshToonMaterial({ color: cColor, side: THREE.DoubleSide });
-    var cGeo = new THREE.CubeGeometry(1, cScale / 40, cScale / 40);
-    var cElem = new THREE.Mesh(cGeo, cMat);
-    var cAmp = 3;
+var createCars = function (cScale = 2, cPos = 20, cColor = 0xFFFF00) { // Определяет функцию createCars с параметрами: масштаб, позиция и цвет (по умолчанию желтый)
+    var cMat = new THREE.MeshToonMaterial({ color: cColor, side: THREE.DoubleSide }); // Создает материал с эффектом "мультяшной" заливки (toon) с заданным цветом, отображаемый с обеих сторон
+    var cGeo = new THREE.CubeGeometry(1, cScale / 40, cScale / 40); // Создает геометрию куба с шириной 1 и высотой/глубиной, зависящими от масштаба
+    var cElem = new THREE.Mesh(cGeo, cMat); // Создает mesh (объект) для автомобиля с заданной геометрией и материалом
+    var cAmp = 3; // Устанавливает амплитуду для случайного позиционирования
 
-    if (createCarPos) {
-        createCarPos = false;
-        cElem.position.x = -cPos;
-        cElem.position.z = (mathRandom(cAmp));
+    if (createCarPos) { // Проверяет, если переменная createCarPos равна true
+        createCarPos = false; // Устанавливает createCarPos в false, чтобы изменить состояние
+        cElem.position.x = -cPos; // Устанавливает позицию автомобиля по оси X на -cPos
+        cElem.position.z = (mathRandom(cAmp)); // Устанавливает случайную позицию автомобиля по оси Z в пределах амплитуды
 
+        // Анимирует движение автомобиля по оси X с использованием TweenMax
         TweenMax.to(cElem.position, 3, { x: cPos, repeat: -1, yoyo: true, delay: mathRandom(3) });
-    } else {
-        createCarPos = true;
-        cElem.position.x = (mathRandom(cAmp));
-        cElem.position.z = -cPos;
-        cElem.rotation.y = 90 * Math.PI / 180;
+    } else { // Если createCarPos равно false
+        createCarPos = true; // Устанавливает createCarPos обратно в true
+        cElem.position.x = (mathRandom(cAmp)); // Устанавливает случайную позицию автомобиля по оси X в пределах амплитуды
+        cElem.position.z = -cPos; // Устанавливает позицию автомобиля по оси Z на -cPos
+        cElem.rotation.y = 90 * Math.PI / 180; // Поворачивает автомобиль на 90 градусов по оси Y (в радианах)
 
+        // Анимирует движение автомобиля по оси Z с использованием TweenMax
         TweenMax.to(cElem.position, 5, { z: cPos, repeat: -1, yoyo: true, delay: mathRandom(3), ease: Power1.easeInOut });
-    };
-    cElem.receiveShadow = true;
-    cElem.castShadow = true;
-    cElem.position.y = Math.abs(mathRandom(5));
-    city.add(cElem);
+    }
+    
+    cElem.receiveShadow = true; // Указывает, что автомобиль может принимать тени
+    cElem.castShadow = true; // Указывает, что автомобиль может отбрасывать тени
+    cElem.position.y = Math.abs(mathRandom(5)); // Устанавливает случайную высоту автомобиля по оси Y
+    city.add(cElem); // Добавляет автомобиль в объект города
 };
 
-var generateLines = function () {
-    for (var i = 0; i < 60; i++) {
-        createCars(0.1, 20);
-    };
+var generateLines = function () { // Определяет функцию generateLines для создания линий автомобилей
+    for (var i = 0; i < 60; i++) { // Цикл для создания 60 автомобилей
+        createCars(0.1, 20); // Вызывает функцию createCars с заданными параметрами (масштаб 0.1 и позиция 20)
+    }
 };
 
 // Camera Position
-var cameraSet = function () {
-    createCars(0.1, 20, 0xFFFFFF);
+var cameraSet = function () { // Определяет функцию cameraSet для установки камеры
+    createCars(0.1, 20, 0xFFFFFF); // Создает автомобили с заданными параметрами (масштаб 0.1, позиция 20, цвет белый)
 };
 
 // Animate functions
-var animate = function () {
-    var time = Date.now() * 0.00005;
-    requestAnimationFrame(animate);
+var animate = function () { // Определяет функцию animate для анимации сцены
+    var time = Date.now() * 0.00005; // Получает текущее время и масштабирует его для использования в анимации
+    requestAnimationFrame(animate); // Запрашивает следующий кадр анимации, создавая бесконечный цикл
 
-    city.rotation.y -= ((mouse.x * 8) - camera.rotation.y) * uSpeed;
-    city.rotation.x -= (-(mouse.y * 2) - camera.rotation.x) * uSpeed;
+    // Обновляет вращение города в зависимости от положения мыши
+    city.rotation.y -= ((mouse.x * 8) - camera.rotation.y) * uSpeed; // Вращает город по оси Y в зависимости от положения мыши
+    city.rotation.x -= (-(mouse.y * 2) - camera.rotation.x) * uSpeed; // Вращает город по оси X в зависимости от положения мыши
+
+    // Ограничивает вращение города по оси X в пределах от -0.05 до 1
     if (city.rotation.x < -0.05) {
-        city.rotation.x = -0.05;
+        city.rotation.x = -0.05; // Устанавливает максимальное значение вращения по оси X
     } else if (city.rotation.x > 1) {
-        city.rotation.x = 1;
+        city.rotation.x = 1; // Устанавливает минимальное значение вращения по оси X
     }
-    var cityRotation = Math.sin(Date.now() / 5000) * 13;
+
+    var cityRotation = Math.sin(Date.now() / 5000) * 13; // Вычисляет вращение города на основе синусоиды для создания эффекта колебания
+
+    // Цикл для обработки объектов в городе (пока не используется)
     for (let i = 0, l = town.children.length; i < l; i++) {
-        var object = town.children[i];
+        var object = town.children[i]; // Получает каждый объект в городе
     }
 
-    smoke.rotation.y += 0.01;
-    smoke.rotation.x += 0.01;
+    // Обновляет вращение объекта "дым"
+    smoke.rotation.y += 0.01; // Вращает дым по оси Y
+    smoke.rotation.x += 0.01; // Вращает дым по оси X
 
-    camera.lookAt(city.position);
-    renderer.render(scene, camera);
-
+    camera.lookAt(city.position); // Устанавливает камеру так, чтобы она смотрела на позицию города
+    renderer.render(scene, camera); // Рендерит сцену с использованием камеры
 }
 
 // Calling Main Functions
