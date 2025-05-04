@@ -1,55 +1,55 @@
 // Base Parameters
-var renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
+var renderer = new THREE.WebGLRenderer({ antialias: true }); // Создает экземпляр WebGLRenderer с включенной сглаживанием (antialias)
+renderer.setSize(window.innerWidth, window.innerHeight); // Устанавливает размер рендерера в соответствии с размерами окна браузера
 
-if (window.innerWidth > 800) {
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.shadowMap.needsUpdate = true;
-};
-document.body.appendChild(renderer.domElement);
+if (window.innerWidth > 800) { // Проверяет, если ширина окна больше 800 пикселей
+    renderer.shadowMap.enabled = true; // Включает отображение теней
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Устанавливает тип теней на мягкие тени
+    renderer.shadowMap.needsUpdate = true; // Указывает, что карта теней нуждается в обновлении
+}
+document.body.appendChild(renderer.domElement); // Добавляет элемент рендерера в тело документа (DOM)
 
 // Make it responsive
-window.addEventListener("resize", onWindowResize, false);
-function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-};
+window.addEventListener("resize", onWindowResize, false); // Добавляет обработчик события изменения размера окна
+function onWindowResize() { // Функция для обработки изменения размера окна
+    camera.aspect = window.innerWidth / window.innerHeight; // Обновляет соотношение сторон камеры
+    camera.updateProjectionMatrix(); // Обновляет матрицу проекции камеры
+    renderer.setSize(window.innerWidth, window.innerHeight); // Устанавливает новый размер рендерера
+}
 
-var camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 500);
-camera.position.set(0, 2, 14);
+var camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 500); // Создает перспективную камеру с заданными параметрами
+camera.position.set(0, 2, 14); // Устанавливает позицию камеры в пространстве
 
-var scene = new THREE.Scene();
-var city = new THREE.Object3D();
-var smoke = new THREE.Object3D();
-var town = new THREE.Object3D();
-var createCarPos = true;
-var uSpeed = 0.001;
+var scene = new THREE.Scene(); // Создает новую сцену
+var city = new THREE.Object3D(); // Создает новый объект для города
+var smoke = new THREE.Object3D(); // Создает новый объект для дыма
+var town = new THREE.Object3D(); // Создает новый объект для города (возможно, для дальнейшего использования)
+var createCarPos = true; // Переменная для управления созданием позиции автомобиля
+var uSpeed = 0.001; // Устанавливает скорость (возможно, для анимации)
 
 // FOG Background
-var setcolor = 0x39FF14;
-scene.background = new THREE.Color(setcolor);
-scene.fog = new THREE.Fog(setcolor, 10, 16);
+var setcolor = 0x39FF14; // Устанавливает цвет фона (зеленый цвет в шестнадцатеричном формате)
+scene.background = new THREE.Color(setcolor); // Устанавливает цвет фона сцены
+scene.fog = new THREE.Fog(setcolor, 10, 16); // Устанавливает туман в сцене с заданным цветом и расстоянием
 
 // Random Function
-function mathRandom(num = 8) {
-    var numValue = - Math.random() * num + Math.random() * num;
-    return numValue;
-};
+function mathRandom(num = 8) { // Определяет функцию mathRandom с параметром num, по умолчанию равным 8
+    var numValue = - Math.random() * num + Math.random() * num; // Генерирует случайное число в диапазоне от -num до +num
+    return numValue; // Возвращает сгенерированное случайное число
+}
 
 // Change Building Colors
-var setTintNum = true;
-function setTintColor() {
-    if (setTintNum) {
-        setTintNum = false;
-        var setColor = 0x000000;
-    } else {
-        setTintNum = true;
-        var setColor = 0x000000;
-    };
-    return setColor;
-};
+var setTintNum = true; // Переменная для отслеживания состояния изменения цвета (по умолчанию true)
+function setTintColor() { // Определяет функцию setTintColor для изменения цвета
+    if (setTintNum) { // Проверяет, если setTintNum равно true
+        setTintNum = false; // Устанавливает setTintNum в false, чтобы изменить состояние
+        var setColor = 0x000000; // Устанавливает цвет (черный) в переменную setColor
+    } else { // Если setTintNum равно false
+        setTintNum = true; // Устанавливает setTintNum обратно в true
+        var setColor = 0x000000; // Устанавливает цвет (черный) в переменную setColor (возможно, здесь подразумевался другой цвет)
+    }
+    return setColor; // Возвращает установленный цвет
+}
 
 // Create City
 function init() {
