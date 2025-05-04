@@ -52,74 +52,74 @@ function setTintColor() { // Определяет функцию setTintColor д
 }
 
 // Create City
-function init() {
-    var segments = 2;
-    for (var i = 1; i < 100; i++) {
-        var geometry = new THREE.CubeGeometry(1, 0, 0, segments, segments, segments);
-        var material = new THREE.MeshStandardMaterial({
-            color: setTintColor(),
-            wireframe: false,
-            shading: THREE.SmoothShading,
-            side: THREE.DoubleSide
+function init() { // Определяет функцию init для инициализации города
+    var segments = 2; // Устанавливает количество сегментов для геометрии куба
+    for (var i = 1; i < 100; i++) { // Цикл для создания 99 кубов
+        var geometry = new THREE.CubeGeometry(1, 0, 0, segments, segments, segments); // Создает геометрию куба с заданными сегментами
+        var material = new THREE.MeshStandardMaterial({ // Создает стандартный материал для куба
+            color: setTintColor(), // Устанавливает цвет материала, вызывая функцию setTintColor
+            wireframe: false, // Устанавливает режим отображения без каркасной сетки
+            shading: THREE.SmoothShading, // Устанавливает сглаживание для материала
+            side: THREE.DoubleSide // Устанавливает отображение материала с обеих сторон
         });
-        var wmaterial = new THREE.MeshLambertMaterial({
-            color: 0xFFFFFF,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.03,
-            side: THREE.DoubleSide
+        var wmaterial = new THREE.MeshLambertMaterial({ // Создает ламбертовский материал для каркасной сетки
+            color: 0xFFFFFF, // Устанавливает цвет материала на белый
+            wireframe: true, // Включает каркасный режим отображения
+            transparent: true, // Устанавливает прозрачность материала
+            opacity: 0.03, // Устанавливает уровень прозрачности
+            side: THREE.DoubleSide // Устанавливает отображение материала с обеих сторон
         });
 
-        var cube = new THREE.Mesh(geometry, material);
-        var wire = new THREE.Mesh(geometry, material);
-        var floor = new THREE.Mesh(geometry, material);
-        var wfloor = new THREE.Mesh(geometry, material);
+        var cube = new THREE.Mesh(geometry, material); // Создает куб с заданной геометрией и материалом
+        var wire = new THREE.Mesh(geometry, material); // Создает каркасный куб (не используется в дальнейшем)
+        var floor = new THREE.Mesh(geometry, material); // Создает пол с заданной геометрией и материалом
+        var wfloor = new THREE.Mesh(geometry, material); // Создает каркасный пол (не используется в дальнейшем)
 
-        cube.add(wfloor);
-        cube.setShadow = true;
-        cube.receiveShadow = true;
-        cube.rotationValue = 0.1 + Math.abs(mathRandom(8));
-        floor.scale.y = 0.05;
-        cube.scale.y = 0.1 + Math.abs(mathRandom(8));
+        cube.add(wfloor); // Добавляет каркасный пол к кубу
+        cube.setShadow = true; // Устанавливает свойство для куба (не используется в THREE.js)
+        cube.receiveShadow = true; // Указывает, что куб может принимать тени
+        cube.rotationValue = 0.1 + Math.abs(mathRandom(8)); // Устанавливает значение вращения куба
+        floor.scale.y = 0.05; // Уменьшает высоту пола
+        cube.scale.y = 0.1 + Math.abs(mathRandom(8)); // Устанавливает высоту куба с учетом случайного значения
 
-        var cubeWidth = 0.9;
-        cube.scale.x = cube.scale.z = cubeWidth + mathRandom(1 - cubeWidth);
-        cube.position.x = Math.round(mathRandom());
-        cube.position.z = Math.round(mathRandom());
+        var cubeWidth = 0.9; // Устанавливает максимальную ширину куба
+        cube.scale.x = cube.scale.z = cubeWidth + mathRandom(1 - cubeWidth); // Устанавливает ширину и глубину куба с учетом случайного значения
+        cube.position.x = Math.round(mathRandom()); // Устанавливает случайное значение для позиции по оси X
+        cube.position.z = Math.round(mathRandom()); // Устанавливает случайное значение для позиции по оси Z
 
-        floor.position.set(cube.position.x, 0, cube.position.z);
+        floor.position.set(cube.position.x, 0, cube.position.z); // Устанавливает позицию пола в соответствии с позицией куба
 
-        town.add(floor);
-        town.add(cube);
+        town.add(floor); // Добавляет пол в объект города
+        town.add(cube); // Добавляет куб в объект города
     };
 
     // Particulars
-    var gmaterial = new THREE.MeshToonMaterial({ color: 0xFFFF00, side: THREE.DoubleSide });
-    var gparticular = new THREE.CircleGeometry(0.01, 3);
-    var aparticular = 5;
+    var gmaterial = new THREE.MeshToonMaterial({ color: 0xFFFF00, side: THREE.DoubleSide }); // Создает материал с эффектом "мультяшной" заливки (toon) желтого цвета, отображаемый с обеих сторон
+    var gparticular = new THREE.CircleGeometry(0.01, 3); // Создает геометрию круга с радиусом 0.01 и 3 сегментами
+    var aparticular = 5; // Устанавливает максимальное значение для случайного позиционирования частиц
 
-    for (var h = 1; h < 300; h++) {
-        var particular = new THREE.Mesh(gparticular, gmaterial);
-        particular.position.set(mathRandom(aparticular), mathRandom(aparticular), mathRandom(aparticular));
-        particular.rotation.set(mathRandom(), mathRandom(), mathRandom());
-        smoke.add(particular);
-    };
+    for (var h = 1; h < 300; h++) { // Цикл для создания 299 частиц
+        var particular = new THREE.Mesh(gparticular, gmaterial); // Создает mesh (объект) для каждой частицы с заданной геометрией и материалом
+        particular.position.set(mathRandom(aparticular), mathRandom(aparticular), mathRandom(aparticular)); // Устанавливает случайную позицию частицы в пределах заданного диапазона
+        particular.rotation.set(mathRandom(), mathRandom(), mathRandom()); // Устанавливает случайное вращение частицы по всем осям
+        smoke.add(particular); // Добавляет частицу в объект "дым" (smoke)
+    }
 
-    var pmaterial = new THREE.MeshPhongMaterial({
-        color: 0x000000,
-        side: THREE.DoubleSide,
-        roughness: 10,
-        metalness: 0.6,
-        opacity: 0.9,
-        transparent: true
+    var pmaterial = new THREE.MeshPhongMaterial({ // Создает материал Phong для плоскости
+        color: 0x000000, // Устанавливает цвет материала на черный
+        side: THREE.DoubleSide, // Устанавливает отображение материала с обеих сторон
+        roughness: 10, // Устанавливает шероховатость материала
+        metalness: 0.6, // Устанавливает металлический эффект материала
+        opacity: 0.9, // Устанавливает уровень прозрачности материала
+        transparent: true // Указывает, что материал прозрачный
     });
 
-    var pgeometry = new THREE.PlaneGeometry(60, 60);
-    var pelement = new THREE.Mesh(pgeometry, pmaterial);
-    pelement.rotation.x = -90 * Math.PI / 180;
-    pelement.position.y = -0.001;
-    pelement.receiveShadow = true;
-    city.add(pelement);
+    var pgeometry = new THREE.PlaneGeometry(60, 60); // Создает геометрию плоскости размером 60x60
+    var pelement = new THREE.Mesh(pgeometry, pmaterial); // Создает mesh (объект) для плоскости с заданной геометрией и материалом
+    pelement.rotation.x = -90 * Math.PI / 180; // Поворачивает плоскость на -90 градусов по оси X (в радианах)
+    pelement.position.y = -0.001; // Устанавливает позицию плоскости немного ниже нуля по оси Y
+    pelement.receiveShadow = true; // Указывает, что плоскость может принимать тени
+    city.add(pelement); // Добавляет плоскость в объект города
 };
 
 // Mouse functions
