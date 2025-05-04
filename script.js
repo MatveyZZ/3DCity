@@ -123,62 +123,66 @@ function init() { // Определяет функцию init для иници�
 };
 
 // Mouse functions
-var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2(), INTERSECTED;
-var intersected;
+var raycaster = new THREE.Raycaster(); // Создает новый экземпляр Raycaster для определения пересечений с объектами в сцене
+var mouse = new THREE.Vector2(), INTERSECTED; // Создает вектор для хранения координат мыши и переменную для хранения пересеченного объекта
+var intersected; // Переменная для хранения информации о пересеченном объекте (не используется в данном коде)
 
-function onMouseMove(e) {
-    e.preventDefault();
-    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
-};
+function onMouseMove(e) { // Функция для обработки движения мыши
+    e.preventDefault(); // Отменяет стандартное поведение браузера (например, прокрутку)
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1; // Нормализует координату X мыши в диапазоне от -1 до 1
+    mouse.y = - (e.clientY / window.innerHeight) * 2 + 1; // Нормализует координату Y мыши в диапазоне от -1 до 1 (инвертирует ось Y)
+}
 
-function onDocumentTouchStart(e) {
-    if (e.touches.length == 1) {
-        e.preventDefault();
-        mouse.x = e.touches[0].pageX - window.innerWidth / 2;
-        mouse.y = e.touches[0].pageY - window.innerHeight / 2;
-    };
-};
-function onDocumentTouchMove(e) {
-    if (e.touches.length == 1) {
-        e.preventDefault();
-        mouse.x = e.touches[0].pageX - window.innerWidth / 2;
-        mouse.y = e.touches[0].pageY - window.innerHeight / 2;
-    };
-};
+function onDocumentTouchStart(e) { // Функция для обработки начала касания на мобильных устройствах
+    if (e.touches.length == 1) { // Проверяет, если одно касание
+        e.preventDefault(); // Отменяет стандартное поведение браузера
+        mouse.x = e.touches[0].pageX - window.innerWidth / 2; // Устанавливает координату X мыши в зависимости от положения касания
+        mouse.y = e.touches[0].pageY - window.innerHeight / 2; // Устанавливает координату Y мыши в зависимости от положения касания
+    }
+}
 
-window.addEventListener('mousemove', onMouseMove, false);
-window.addEventListener('touchstart', onDocumentTouchStart, false);
-window.addEventListener('touchmove', onDocumentTouchMove, false);
+function onDocumentTouchMove(e) { // Функция для обработки движения касания на мобильных устройствах
+    if (e.touches.length == 1) { // Проверяет, если одно касание
+        e.preventDefault(); // Отменяет стандартное поведение браузера
+        mouse.x = e.touches[0].pageX - window.innerWidth / 2; // Устанавливает координату X мыши в зависимости от положения касания
+        mouse.y = e.touches[0].pageY - window.innerHeight / 2; // Устанавливает координату Y мыши в зависимости от положения касания
+    }
+}
+
+// Добавляет обработчики событий для мыши и касания
+window.addEventListener('mousemove', onMouseMove, false); // Обрабатывает движение мыши
+window.addEventListener('touchstart', onDocumentTouchStart, false); // Обрабатывает начало касания
+window.addEventListener('touchmove', onDocumentTouchMove, false); // Обрабатывает движение касания
 
 // Create lights
-var ambientLight = new THREE.AmbientLight(0xFFFFFF, 4);
-var lightFront = new THREE.SpotLight(0xFFFFFF, 20, 10);
-var lightBack = new THREE.PointLight(0xFFFFFF, 0.5);
-var spotLightHelper = new THREE.SpotLightHelper(lightFront);
+var ambientLight = new THREE.AmbientLight(0xFFFFFF, 4); // Создает окружающий свет белого цвета с интенсивностью 4
+var lightFront = new THREE.SpotLight(0xFFFFFF, 20, 10); // Создает направленный свет (spotlight) белого цвета с интенсивностью 20 и дальностью 10
+var lightBack = new THREE.PointLight(0xFFFFFF, 0.5); // Создает точечный свет (point light) белого цвета с интенсивностью 0.5
+var spotLightHelper = new THREE.SpotLightHelper(lightFront); // Создает вспомогательный объект для визуализации направления и области действия направленного света
 
-lightFront.rotation.x = 45 * Math.PI / 180;
-lightFront.rotation.z = -45 * Math.PI / 180;
-lightFront.position.set(5, 5, 5);
-lightFront.castShadow = true;
-lightFront.shadow.mapSize.width = 6000;
-lightFront.shadow.mapSize.height = lightFront.shadow.mapSize.width;
-lightFront.penumbra = 0.1;
-lightBack.position.set(0, 6, 0);
+// Настройка параметров направленного света
+lightFront.rotation.x = 45 * Math.PI / 180; // Поворачивает направленный свет на 45 градусов по оси X (в радианах)
+lightFront.rotation.z = -45 * Math.PI / 180; // Поворачивает направленный свет на -45 градусов по оси Z (в радианах)
+lightFront.position.set(5, 5, 5); // Устанавливает позицию направленного света в пространстве
+lightFront.castShadow = true; // Указывает, что направленный свет может отбрасывать тени
+lightFront.shadow.mapSize.width = 6000; // Устанавливает ширину карты теней для направленного света
+lightFront.shadow.mapSize.height = lightFront.shadow.mapSize.width; // Устанавливает высоту карты теней равной ширине
+lightFront.penumbra = 0.1; // Устанавливает значение полутени для направленного света
+lightBack.position.set(0, 6, 0); // Устанавливает позицию точечного света в пространстве
 
-smoke.position.y = 2;
+smoke.position.y = 2; // Устанавливает позицию объекта "дым" (smoke) на высоту 2 по оси Y
 
-scene.add(ambientLight);
-city.add(lightFront);
-scene.add(lightBack);
-scene.add(city);
-city.add(smoke);
-city.add(town);
+// Добавляет источники света и объекты в сцену
+scene.add(ambientLight); // Добавляет окружающий свет в сцену
+city.add(lightFront); // Добавляет направленный свет в объект города
+scene.add(lightBack); // Добавляет точечный свет в сцену
+scene.add(city); // Добавляет объект города в сцену
+city.add(smoke); // Добавляет объект "дым" в город
+city.add(town); // Добавляет объект "город" (town) в город
 
 // Grid Helper
-var gridHelper = new THREE.GridHelper(60, 120, 0xFF0000, 0x000000);
-city.add(gridHelper);
+var gridHelper = new THREE.GridHelper(60, 120, 0xFF0000, 0x000000); // Создает вспомогательную сетку размером 60 с 120 делениями, красного цвета с черным фоном
+city.add(gridHelper); // Добавляет вспомогательную сетку в объект города
 
 // Cars World
 var createCars = function (cScale = 2, cPos = 20, cColor = 0xFFFF00) {
